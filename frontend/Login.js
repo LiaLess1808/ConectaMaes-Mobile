@@ -22,7 +22,7 @@ export default function Login({ navigation }) {
     var jsonBody = JSON.stringify(userObj);
     console.log(jsonBody);
 
-    fetch('https://tet--liviabraga.glitch.me/login', {
+    fetch('https://nathless-tet.glitch.me/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ export default function Login({ navigation }) {
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        if (json.mensagem === 'Usuario valido!') {
+        if (json.mensagem === 'Usuário logado, redirecionando...') {
           navigation.navigate('AtualizaUsuario',{
             idUsuario:json.id
           });

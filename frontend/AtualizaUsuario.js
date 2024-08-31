@@ -20,7 +20,7 @@ export default function AtualizaUsuario({ navigation, route }) {
 
   useEffect(() => {
     async function fetchItem() {
-      fetch('https://tet--liviabraga.glitch.me/usuarios/' + idUsuario, {
+      fetch('https://nathless-tet.glitch.me/showUser/' + idUsuario, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -41,7 +41,7 @@ export default function AtualizaUsuario({ navigation, route }) {
     var jsonBody = JSON.stringify(userObj);
     console.log(jsonBody);
 
-    fetch('https://tet--liviabraga.glitch.me/usuarios/' + idUsuario, {
+    fetch('https://nathless-tet.glitch.me/editUser/' + idUsuario, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export default function AtualizaUsuario({ navigation, route }) {
   };
 
   const Deletar = () => {
-    fetch('https://tet--liviabraga.glitch.me/usuarios/' + idUsuario, {
+    fetch('https://nathless-tet.glitch.me/deleteUser/' + idUsuario, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',

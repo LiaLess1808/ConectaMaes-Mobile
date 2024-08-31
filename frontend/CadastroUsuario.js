@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { useFonts, Roboto_400Regular, Roboto_700Bold, Poppins_100Thin, Poppins_400Regular, Poppins_700Bold, OpenSans_400Regular } from '@expo-google-fonts/dev';
 
 export default function CadastroUsuario({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [tema, setTema] = useState('amarelo'); // Estado inicial para o tema
 
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
@@ -18,16 +20,16 @@ export default function CadastroUsuario({ navigation }) {
   });
 
   const Cadastrar = () => {
-    if (!name || !email || !senha) {
+    if (!name || !email || !senha || !tema) {
       console.log('Erro');
       return;
     }
 
-    var userObj = { nome: name, email: email, senha: senha };
+    var userObj = { nome: name, email: email, senha: senha, tema: tema };
     var jsonBody = JSON.stringify(userObj);
     console.log(jsonBody);
 
-    fetch('https://tet--liviabraga.glitch.me/usuarios', {
+    fetch('https://nathless-tet.glitch.me/insertUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -81,6 +83,17 @@ export default function CadastroUsuario({ navigation }) {
             value={senha}
             autoCapitalize="none"
           />
+
+          <Picker
+            selectedValue={tema}
+            style={styles.input}
+            onValueChange={(itemValue) => setTema(itemValue)}
+          >
+            <Picker.Item label="Tema Amarelo" value="yellow" />
+            <Picker.Item label="Tema Azul" value="blue" />
+            <Picker.Item label="Tema Rosa" value="pink" />
+          </Picker>
+
           <TouchableOpacity style={styles.signupBtn} onPress={Cadastrar}>
             <LinearGradient
               colors={['#7DEBFA', '#40aebd', '#037180']}

@@ -1,6 +1,5 @@
 //Projeto TET NATH
 
-
 const express = require('express');
 const mysql = require('mysql2');
 const port = 3000;
@@ -16,9 +15,9 @@ app.listen(port);
 const db = {
     host: '54.173.126.116',
     port: 3306,
-    user:'00000000000',
-    password: '00000000000',
-    database: '00000000000'
+    user:'tet-conectamaes',
+    password: 'conectamaes2024',
+    database: 'tet-conectamaes'
 };
 
 const execSQLQuery = (sqlQry, id, res) => {
@@ -61,12 +60,12 @@ app.post('/insertUser', (req, res)=> {
 
 app.post('/login',async(req,res)=>{
   const id = [req.body.email, req.body.senha];
-  let [result] = await resultSQLQuery('SELECT * FROM usuario WHERE usu_email=? and usu_senha=?', id);
+  let [result] = await resultSQLQuery('SELECT * FROM usuario WHERE email=? and senha=?', id);
   console.log(result)
   if(result){
     res.json({
       "mensagem":"Usuário logado, redirecionando...",
-      "id":result.usu_id 
+      "id":result.idUsuario 
     })
   }else{
     res.json({
@@ -77,29 +76,26 @@ app.post('/login',async(req,res)=>{
 
 app.get('/showUser/:id', (req, res) => {
   const id = [req.params.id]
-  execSQLQuery('SELECT * FROM usuario WHERE usu_id = ?;', id, res)
+  execSQLQuery('SELECT * FROM usuario WHERE idUsuario = ?;', id, res)
 });
 
 app.get('/showUserName/:id', (req, res) => {
   const id = [req.params.id]
-  execSQLQuery('SELECT usu_nome FROM usuario WHERE usu_id = ?;', id, res)
+  execSQLQuery('SELECT nomeCompleto FROM usuario WHERE idUsuario = ?;', id, res)
 });
 
 app.delete('/deleteNullUsers', (req, res) => {
   const id = [];
-  const query = `DELETE FROM usuario WHERE usu_email IS NULL OR usu_email = '' OR usu_nome IS NULL OR usu_nome = '' OR usu_senha IS NULL OR usu_senha = '';`;
+  const query = `DELETE FROM usuario WHERE email IS NULL OR email = '' OR nomeCompleto IS NULL OR nomeCompleto = '' OR senha IS NULL OR senha = '';`;
   execSQLQuery(query, id, res);
 });
 
 app.delete('/deleteUser/:id', (req, res) => {
   const id = [req.params.id]
-  execSQLQuery('DELETE FROM usuario WHERE usu_id = ?;', id, res)
+  execSQLQuery('DELETE FROM usuario WHERE idUsuario = ?;', id, res)
 });
 
 app.put('/editUser/:id', (req, res) => {
   const data = [req.body.nome, req.body.email, req.body.senha, req.params.id]
-  execSQLQuery('UPDATE usuario set usu_nome = ?, usu_email = ? , usu_senha = ? WHERE usu_id = ?;', data, res)
+  execSQLQuery('UPDATE usuario set nomeCompleto = ?, email = ? , senha = ? WHERE idUsuario = ?;', data, res)
 });
-
-
-
