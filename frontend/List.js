@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  View,
-  FlatList,
-  StyleSheet,
-  Text,
-  StatusBar,
-} from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity } from 'react-native';
 
 const DATA = [
   {
@@ -26,29 +19,27 @@ const DATA = [
   },
 ];
 
-const Item = ({title, description, id}) => (
+const Item = ({ title, description, id }) => (
   <View style={styles.item}>
     <Text style={styles.id}>{id}</Text>
     <Text style={styles.title}>{title}</Text>
     <Text style={styles.description}>{description}</Text>
     <TouchableOpacity>
-      <text>Selecionar</text>
+      <Text>Selecionar</Text>
     </TouchableOpacity>
   </View>
 );
 
-const renderItem = ({item})=>{
-  return(
-     <Item title={item.title}  description={item.description} id={item.id}/>//como aparece na tela
-  )
-}
+const renderItem = ({ item }) => (
+  <Item title={item.title} description={item.description} id={item.id} />
+);
 
 const List = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={DATA}
-        renderItem={renderItem}//como aparece na tela
+        renderItem={renderItem}
         keyExtractor={item => item.id}
       />
     </SafeAreaView>

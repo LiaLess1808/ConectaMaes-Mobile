@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, FlatList } from 'react-native';
 import { useFonts, Roboto_400Regular, Roboto_700Bold, Poppins_100Thin, Poppins_400Regular, Poppins_700Bold, OpenSans_400Regular } from '@expo-google-fonts/dev';
 
 export default function AtualizaUsuario({ navigation, route }) {
   const [name, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const{idUsuario} = route.params;
-  
+  const { idUsuario } = route.params;
+
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_700Bold,
@@ -25,13 +25,13 @@ export default function AtualizaUsuario({ navigation, route }) {
           'Content-Type': 'application/json',
         },
       })
-        .then((res) => res.json())
-        .then((resJson) => {
-          console.log(resJson);
-          setNome(resJson[0].usu_nome);
-          setEmail(resJson[0].usu_email);
-        })
-        .catch((e) => console.log(e));
+      .then((res) => res.json())
+      .then((resJson) => {
+        console.log(resJson);
+        setNome(resJson[0].usu_nome);
+        setEmail(resJson[0].usu_email);
+      })
+      .catch((e) => console.log(e));
     }
     fetchItem();
   }, []);
@@ -49,14 +49,14 @@ export default function AtualizaUsuario({ navigation, route }) {
       },
       body: jsonBody,
     })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        navigation.goBack();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(json);
+      navigation.goBack();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
 
   const Deletar = () => {
@@ -67,21 +67,25 @@ export default function AtualizaUsuario({ navigation, route }) {
         Accept: 'application/json',
       },
     })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        navigation.goBack();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    .then((response) => response.json())
+    .then((json) => {
+      console.log(json);
+      navigation.goBack();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
   };
+
+  // Lista de ações
+  const actions = [
+    { key: 'update', text: 'Atualizar', action: Atualizar },
+    { key: 'delete', text: 'Deletar', action: Deletar },
+  ];
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#FA7EBD', '#FAEC7D']}
-        style={styles.gradientBackground}>
+      <LinearGradient colors={['#FA7EBD', '#FAEC7D']} style={styles.gradientBackground}>
         <View style={styles.content}>
           <Image style={styles.logo} source={require('./assets/image.png')} />
           <Text style={styles.title}>Atualizar informações de usuário</Text>
@@ -108,21 +112,21 @@ export default function AtualizaUsuario({ navigation, route }) {
             secureTextEntry
             value={password}
           />
-          <TouchableOpacity style={styles.button} onPress={Atualizar}>
-            <LinearGradient
-              colors={['#7DEBFA', '#40aebd', '#037180']}
-              style={styles.gradientButton}>
-              <Text style={styles.buttonText}>Atualizar</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.button} onPress={Deletar}>
-            <LinearGradient
-              colors={['#7DEBFA', '#40aebd', '#037180']}
-              style={styles.gradientButton}>
-              <Text style={styles.buttonText}>Deletar</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          <FlatList
+            data={actions}
+            renderItem={({ item }) => (
+              <TouchableOpacity style={styles.button} onPress={item.action}>
+                <LinearGradient
+                  colors={['#7DEBFA', '#40aebd', '#037180']}
+                  style={styles.gradientButton}
+                >
+                  <Text style={styles.buttonText}>{item.text}</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
+            keyExtractor={item => item.key}
+            contentContainerStyle={styles.buttonContainer}
+          />
         </View>
       </LinearGradient>
     </View>
@@ -140,6 +144,7 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: 'center',
+    width: '100%', 
   },
   title: {
     fontSize: 24,
@@ -157,7 +162,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins_400Regular',
   },
   button: {
-    width: '40%',
+    width: '100%', 
     marginBottom: 10,
     borderRadius: 30,
     overflow: 'hidden',
@@ -181,5 +186,9 @@ const styles = StyleSheet.create({
     height: 138,
     width: 128,
     marginBottom: 5,
+  },
+  buttonContainer: {
+    width: '100%',
+    alignItems: 'center',
   },
 });
