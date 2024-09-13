@@ -28,8 +28,8 @@ export default function AtualizaUsuario({ navigation, route }) {
       .then((res) => res.json())
       .then((resJson) => {
         console.log(resJson);
-        setNome(resJson[0].usu_nome);
-        setEmail(resJson[0].usu_email);
+        setNome(resJson[0].nomeCompleto);
+        setEmail(resJson[0].email);
       })
       .catch((e) => console.log(e));
     }
@@ -77,10 +77,15 @@ export default function AtualizaUsuario({ navigation, route }) {
     });
   };
 
+  const Listar = () => {
+    navigation.navigate(List);
+  };
+
   // Lista de ações
   const actions = [
     { key: 'update', text: 'Atualizar', action: Atualizar },
     { key: 'delete', text: 'Deletar', action: Deletar },
+    { key: 'list', text: 'Listar', action: Listar },
   ];
 
   return (

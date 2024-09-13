@@ -1,64 +1,121 @@
-import React from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 
-const DATA = [
-  {
-    id: '1',
-    title: 'Item 1',
-    description: 'Sobre o item ...',
-  },
-  {
-    id: '2',
-    title: 'Item 2',
-    description: 'Sobre o item ...',
-  },
-  {
-    id: '3',
-    title: 'Item 3',
-    description: 'Sobre o item ...',
-  },
-];
+export function List({ navigation }) {
+  const [data, setData] = useState([]);
 
-const Item = ({ title, description, id }) => (
-  <View style={styles.item}>
-    <Text style={styles.id}>{id}</Text>
-    <Text style={styles.title}>{title}</Text>
-    <Text style={styles.description}>{description}</Text>
-    <TouchableOpacity>
-      <Text>Selecionar</Text>
-    </TouchableOpacity>
-  </View>
-);
+  useEffect(() => {
+    async function fetchList() {
+      fetch('https://nathless-tet.glitch.me/showUsers', {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => res.json())
+        .then((resJson) => {
+          setData(resJson);
+        })
+        .catch((e) => console.log(e));
+    }
+    fetchList();
+  }, []);
 
-const renderItem = ({ item }) => (
-  <Item title={item.title} description={item.description} id={item.id} />
-);
+  const Excluir = (idUsuario) => {
+    return Alert.alert('Confirmar', 'Deseja Excluir?', [
+      {
+        text: 'Sim',
+        onPress: () => {
+          var requestOptions = {
+            method: 'DELETE',
+            redirect: 'follow',
+          };
 
-const List = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
+          fetch('https://nathless-tet.glitch.me/deleteUser/' + idUsuario, requestOptions)
+            .then((response) => response.text())
+            .then((result) => {
+              console.log(result);
+              setData((prevData) => prevData.filter(item => item.idUsuario !== idUsuario)); // Remove da lista
+            })
+            .catch((error) => console.log('error', error));
+        },
+      },
+      {
+        text: 'Não',
+      },
+    ]);
+  };
+
+  const renderItemComponent = ({ item }) => (
+    <View style={styles.listItem}>
+      <View style={styles.listItemView}>
+        <Text style={styles.listItemTitle}>{item.idUsuario}</Text>
+        <Text>{item.nomeCompleto}</Text>
+      </View>
+      <TouchableOpacity
+        style={styles.listItemButton}
+        onPress={() => navigation.navigate('TelaEditar', { id: item.idUsuario })}
+      >
+        <Text style={{ color: 'green' }}>Editar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.listItemButton}
+        onPress={() => Excluir(item.idUsuario)}
+      >
+        <Text style={{ color: 'red' }}>Excluir</Text>
+      </TouchableOpacity>
+    </View>
   );
-};
+
+  const ItemSeparator = () => <View style={styles.listItemSeparator} />;
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={data}
+        renderItem={renderItemComponent}
+        keyExtractor={(item) => item.idUsuario.toString()}
+        ItemSeparatorComponent={ItemSeparator}
+      />
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    backgroundColor: '#F7F7F7',
+    marginTop: 60,
   },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+  listItemView: { alignItems: 'center', flex: 1 },
+  listItemTitle: { fontWeight: 'bold' },
+  listItemButton: {
+    height: 50,
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  title: {
-    fontSize: 32,
+  listItemSeparator: {
+    height: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    marginLeft: 5,
+    marginRight: 5,
+  },
+  listItem: {
+    margin: 10,
+    padding: 10,
+    backgroundColor: '#FFF',
+    width: '80%',
+    flex: 1,
+    alignSelf: 'center',
+    flexDirection: 'row',
+    borderRadius: 5,
   },
 });
 
