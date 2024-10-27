@@ -207,11 +207,12 @@ const Register = ({ navigation }) => {
       estado: location,
       dataNascimentoUsuario: birthDate,
       tema: theme,
-      isAdmin: false, // Defina como necessário
-      linkFotoPerfil: '', // Adicione a lógica para obter o link da foto
+      isAdmin: false,
     };
+    
+    console.log('Dados a serem enviados:', userObj);
 
-    fetch('https://conectamaes-api.glitch.me/insertUser ', {
+    fetch('https://conectamaes-api.glitch.me/insertUser', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

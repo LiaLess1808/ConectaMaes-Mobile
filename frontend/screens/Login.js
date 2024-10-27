@@ -1,4 +1,4 @@
-import {storeId} from '../components/Storage';
+import {storeId} from '../functions/Storage';
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import GradientInput from '../components/GradientInput';

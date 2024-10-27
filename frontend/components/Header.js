@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { verifyAdmin } from '../functions/UserFunctions';
 
-const Header = ({navigation}) => {
+const Header = ({ navigation }) => {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const adminStatus = await verifyAdmin();
+      setIsAdmin(adminStatus);
+    };
+
+    checkAdminStatus();
+  }, []);
+
   const handleIconPress = (iconName) => {
     console.log(`${iconName} icon pressed`);
 
-    if (iconName === 'cog')
-        navigation.navigate('Settings'); // Navega para a tela de Configurações
-    if (iconName === 'magnify') 
-        navigation.navigate('Explore'); // Navega para a tela de Exploração
-};
-
+    if (iconName === 'cog') {
+      navigation.navigate('Settings'); // Navega para a tela de Configurações
+    }
+    if (iconName === 'magnify') {
+      navigation.navigate('Explore'); // Navega para a tela de Exploração
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -19,6 +32,11 @@ const Header = ({navigation}) => {
         <Image source={require('../assets/logo_typography.png')} style={styles.logo} />
       </View>
       <View style={styles.iconsContainer}>
+        {isAdmin && (
+          <TouchableOpacity onPress={() => handleIconPress('admin')}>
+            <Icon name="shield-account" size={24} color="#808080" /> {/* Ícone de administração */}
+          </TouchableOpacity>
+        )}
         <TouchableOpacity onPress={() => handleIconPress('magnify')}>
           <Icon name="magnify" size={24} color="#808080" />
         </TouchableOpacity>

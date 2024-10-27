@@ -43,4 +43,55 @@ const getUserData = async (idUsuario, property) => {
   const getUserPix = async (idUsuario) => await getUserData(idUsuario, 'chavePix');
   const getUserCreationDate = async (idUsuario) => await getUserData(idUsuario, 'dataCriacaoUsuario');
   
+  const getUser  = async (idUsuario) => {
+  try {
+    const [
+      fullName,
+      username,
+      email,
+      password,
+      phone,
+      bio,
+      state,
+      birthdate,
+      theme,
+      isAdmin,
+      profilePicture,
+      pix,
+      creationDate
+    ] = await Promise.all([
+      getUserFullName(idUsuario),
+      getUsername(idUsuario),
+      getUserEmail(idUsuario),
+      getUserPassword(idUsuario),
+      getUserPhone(idUsuario),
+      getUserBio(idUsuario),
+      getUserState(idUsuario),
+      getUserBirthdate(idUsuario),
+      getUserTheme(idUsuario),
+      verifyAdmin(idUsuario),
+      getUserProfilePicture(idUsuario),
+      getUserPix(idUsuario),
+      getUserCreationDate(idUsuario)
+    ]);
 
+    return {
+      fullName,
+      username,
+      email,
+      password,
+      phone,
+      bio,
+      state,
+      birthdate,
+      theme,
+      isAdmin,
+      profilePicture,
+      pix,
+      creationDate
+    };
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    throw error; // ou lidar com o erro de outra forma
+  }
+}

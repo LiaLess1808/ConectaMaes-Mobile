@@ -1,12 +1,12 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const NavigationBar = () => {
+const NavigationBar = ({ themeColor }) => {
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.iconContainer}>
-        <Icon name="home" size={25} color="#D9B575" />
+        <Icon name="home" size={25} color={ themeColor } />
       </TouchableOpacity>
       <TouchableOpacity style={styles.iconContainer}>
         <Icon name="hand-heart" size={25} color="#A8A8A8" />
@@ -19,7 +19,7 @@ const NavigationBar = () => {
         <Icon name="bell" size={25} color="#A8A8A8" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.iconContainer}>
-        <Icon name="account" size={25} color="#D9B575" />
+        <Icon name="account" size={25} color={ themeColor } />
       </TouchableOpacity>
     </View> 
   );
