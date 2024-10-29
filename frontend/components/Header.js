@@ -8,8 +8,12 @@ const Header = ({ navigation }) => {
 
   useEffect(() => {
     const checkAdminStatus = async () => {
-      const adminStatus = await verifyAdmin();
-      setIsAdmin(adminStatus);
+      try {
+        const adminStatus = await verifyAdmin();
+        setIsAdmin(adminStatus);
+      } catch (error) {
+        console.error('Erro ao verificar status de administrador:', error);
+      }
     };
 
     checkAdminStatus();
@@ -18,11 +22,18 @@ const Header = ({ navigation }) => {
   const handleIconPress = (iconName) => {
     console.log(`${iconName} icon pressed`);
 
-    if (iconName === 'cog') {
-      navigation.navigate('Settings'); // Navega para a tela de Configurações
-    }
-    if (iconName === 'magnify') {
-      navigation.navigate('Explore'); // Navega para a tela de Exploração
+    switch (iconName) {
+      case 'cog':
+        navigation.navigate('Settings');
+        break;
+      case 'magnify':
+        navigation.navigate('Explore');
+        break;
+      case 'admin':
+        // Lógica para ação de admin (se aplicável)
+        break;
+      default:
+        break;
     }
   };
 
@@ -32,15 +43,24 @@ const Header = ({ navigation }) => {
         <Image source={require('../assets/logo_typography.png')} style={styles.logo} />
       </View>
       <View style={styles.iconsContainer}>
-        {isAdmin && (
-          <TouchableOpacity onPress={() => handleIconPress('admin')}>
+        {isAdmin == "1" && (
+          <TouchableOpacity
+            onPress={() => handleIconPress('admin')}
+            accessibilityLabel="Admin"
+          >
             <Icon name="shield-account" size={24} color="#808080" /> {/* Ícone de administração */}
           </TouchableOpacity>
         )}
-        <TouchableOpacity onPress={() => handleIconPress('magnify')}>
+        <TouchableOpacity
+          onPress={() => handleIconPress('magnify')}
+          accessibilityLabel="Explorar"
+        >
           <Icon name="magnify" size={24} color="#808080" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleIconPress('cog')}>
+        <TouchableOpacity
+          onPress={() => handleIconPress('cog')}
+          accessibilityLabel="Configurações"
+        >
           <Icon name="cog" size={24} color="#808080" />
         </TouchableOpacity>
       </View>
@@ -68,9 +88,9 @@ const styles = StyleSheet.create({
   iconsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 15,
     minWidth: 60,
     justifyContent: 'flex-end',
+    gap:20,
   },
 });
 

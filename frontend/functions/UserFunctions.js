@@ -1,50 +1,113 @@
-import {getId} from './Storage';
+import { getId } from './Storage';
 
-const fetchUserId = async () => {
-    const id = await getId();
-    return id;
+export const fetchUserId = async () => {
+  const id = await getId();
+  return id;
 };
 
 // Função para pegar um atributo específico do usuário
-const getUserData = async (idUsuario, property) => {
-    try {
-      const response = await fetch(`https://conectamaes-api.glitch.me/${fetchUserId()}/${property}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-      });
-  
-      if (response.ok) {
-        const result = await response.json();
-        return result[property]?.toString() || ''; // Converte o valor para string ou retorna uma string vazia
+const getUserData = async (id, property) => {
+  try {
+    const response = await fetch(`https://conectamaes-api.glitch.me/getUserProperty/${id}/${property}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      if (result.length > 0 && result[0][property]) { // Verifica se há um item no array e se a propriedade existe
+        return result[0][property].toString() || ''; // Converte o valor para string ou retorna vazio
       } else {
-        console.error('Erro ao buscar atributo:', response.status);
+        console.error('Propriedade não encontrada na resposta:', result);
         return '';
       }
-    } catch (error) {
-      console.error('Erro na requisição:', error);
+    } else {
+      console.error('Erro ao buscar atributo:', response.status);
       return '';
     }
-  };
-  
-  const getUserFullName = async (idUsuario) => await getUserData(idUsuario, 'nomeCompleto');
-  const getUsername = async (idUsuario) => await getUserData(idUsuario, 'nomeDeUsuario');
-  const getUserEmail = async (idUsuario) => await getUserData(idUsuario, 'email');
-  const getUserPassword = async (idUsuario) => await getUserData(idUsuario, 'senha');
-  const getUserPhone = async (idUsuario) => await getUserData(idUsuario, 'telefone');
-  const getUserBio = async (idUsuario) => await getUserData(idUsuario, 'biografia');
-  const getUserState = async (idUsuario) => await getUserData(idUsuario, 'estado');
-  const getUserBirthdate = async (idUsuario) => await getUserData(idUsuario, 'dataNascimentoUsuario');
-  const getUserTheme = async (idUsuario) => await getUserData(idUsuario, 'tema');
-  const verifyAdmin = async (idUsuario) => await getUserData(idUsuario, 'isAdmin');
-  const getUserProfilePicture = async (idUsuario) => await getUserData(idUsuario, 'linkFotoPerfil');
-  const getUserPix = async (idUsuario) => await getUserData(idUsuario, 'chavePix');
-  const getUserCreationDate = async (idUsuario) => await getUserData(idUsuario, 'dataCriacaoUsuario');
-  
-  const getUser  = async (idUsuario) => {
+  } catch (error) {
+    console.error('Erro na requisição:', error);
+    return '';
+  }
+};
+
+
+
+
+// Funções de exportação para buscar atributos específicos
+export const getUserFullName = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'nomeCompleto');
+};
+
+export const getUsername = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'nomeDeUsuario');
+};
+
+export const getUserEmail = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'email');
+};
+
+export const getUserPassword = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'senha');
+};
+
+export const getUserPhone = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'telefone');
+};
+
+export const getUserBio = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'biografia');
+};
+
+export const getUserState = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'estado');
+};
+
+export const getUserBirthdate = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'dataNascimentoUsuario');
+};
+
+export const getUserTheme = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'tema');
+};
+
+export const verifyAdmin = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'isAdmin');
+};
+
+export const getUserProfilePicture = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'linkFotoPerfil');
+};
+
+export const getUserPix = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'chavePix');
+};
+
+export const getUserCreationDate = async () => {
+  const id = await fetchUserId();
+  return await getUserData(id, 'dataCriacaoUsuario');
+};
+
+// Função para pegar todos os dados do usuário
+export const getUser = async () => {
   try {
+    const id = await fetchUserId(); // Pega o ID do usuário apenas uma vez
+
     const [
       fullName,
       username,
@@ -58,21 +121,21 @@ const getUserData = async (idUsuario, property) => {
       isAdmin,
       profilePicture,
       pix,
-      creationDate
+      creationDate,
     ] = await Promise.all([
-      getUserFullName(idUsuario),
-      getUsername(idUsuario),
-      getUserEmail(idUsuario),
-      getUserPassword(idUsuario),
-      getUserPhone(idUsuario),
-      getUserBio(idUsuario),
-      getUserState(idUsuario),
-      getUserBirthdate(idUsuario),
-      getUserTheme(idUsuario),
-      verifyAdmin(idUsuario),
-      getUserProfilePicture(idUsuario),
-      getUserPix(idUsuario),
-      getUserCreationDate(idUsuario)
+      getUserFullName(id),
+      getUsername(id),
+      getUserEmail(id),
+      getUserPassword(id),
+      getUserPhone(id),
+      getUserBio(id),
+      getUserState(id),
+      getUserBirthdate(id),
+      getUserTheme(id),
+      verifyAdmin(id),
+      getUserProfilePicture(id),
+      getUserPix(id),
+      getUserCreationDate(id),
     ]);
 
     return {
@@ -88,10 +151,10 @@ const getUserData = async (idUsuario, property) => {
       isAdmin,
       profilePicture,
       pix,
-      creationDate
+      creationDate,
     };
   } catch (error) {
     console.error('Error fetching user data:', error);
-    throw error; // ou lidar com o erro de outra forma
+    throw error; // Ou lidar com o erro de outra forma
   }
-}
+};
