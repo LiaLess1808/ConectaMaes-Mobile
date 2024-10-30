@@ -3,7 +3,13 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const GradientInput = ({ placeholder, value, onChangeText, secureTextEntry, placeholderColor }) => {
+const GradientInput = ({
+  placeholder,
+  value,
+  onChangeText,
+  secureTextEntry,
+  placeholderColor,
+}) => {
   const gradientOpacity = value ? 1 : 0.6; // ajusta a opacidade com base no valor da entrada
 
   return (
@@ -58,7 +64,7 @@ const styles = StyleSheet.create({
     paddingLeft: 30,
     borderRadius: 150,
     zIndex: 1,
-    outline: "none",
+    outline: 'none',
   },
 });
 

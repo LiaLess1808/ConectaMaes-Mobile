@@ -1,7 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Post = ({ title, content, backgroundColor = '#fff', textColor = '#000' }) => {
+const Post = ({
+  title,
+  content,
+  backgroundColor = '#fff',
+  textColor = '#000',
+}) => {
   return (
     <View style={[styles.postContainer, { backgroundColor }]}>
       <Text style={[styles.postTitle, { color: textColor }]}>{title}</Text>

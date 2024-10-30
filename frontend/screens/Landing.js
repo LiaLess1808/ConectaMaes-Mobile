@@ -1,36 +1,58 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import logo from '../assets/logo_icon.png';
 
 function Landing({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.logoContainer}>
-        <Image 
-          source={logo} 
-          style={styles.logo}
-        />
+        <Image source={logo} style={styles.logo} />
       </View>
-      <Text style={[styles.title, styles.centerText]}>Mães ajudando mães a cuidar da vida materna.</Text>
-      <TouchableOpacity style={styles.button} onPress={() => {
-        navigation.navigate('Register');
-      }}>
+      <Text style={[styles.title, styles.centerText]}>
+        Mães ajudando mães a cuidar da vida materna.
+      </Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          navigation.navigate('Register');
+        }}>
         <Text style={styles.buttonText}>Criar conta</Text>
       </TouchableOpacity>
       <Text style={[styles.terms, styles.centerText]}>
-        Ao se cadastrar, você concorda com os{' '} 
-        <Text style={styles.link} onPress={() => {
-          // Implement your login action here
-        }}>Termos de Uso</Text>{' '}e as{' '}
-        <Text style={styles.link} onPress={() => {
-          // Implement your login action here
-        }}>Políticas de Privacidade</Text>.
+        Ao se cadastrar, você concorda com os{' '}
+        <Text
+          style={styles.link}
+          onPress={() => {
+            // Implement your login action here
+          }}>
+          Termos de Uso
+        </Text>{' '}
+        e as{' '}
+        <Text
+          style={styles.link}
+          onPress={() => {
+            // Implement your login action here
+          }}>
+          Políticas de Privacidade
+        </Text>
+        .
       </Text>
-      <Text style={[styles.login, styles.centerText, {marginTop: 20}]}>
+      <Text style={[styles.login, styles.centerText, { marginTop: 20 }]}>
         Já possui uma conta?{' '}
-        <Text style={styles.link} onPress={() => {
-          navigation.navigate('Login');
-        }}>Entre</Text>
+        <Text
+          style={styles.link}
+          onPress={() => {
+            navigation.navigate('Login');
+          }}>
+          Entre
+        </Text>
       </Text>
     </ScrollView>
   );

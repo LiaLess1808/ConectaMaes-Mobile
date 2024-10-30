@@ -1,6 +1,13 @@
-import {storeId} from '../functions/Storage';
+import { storeId, storeToken } from '../functions/Storage';
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+} from 'react-native';
 import GradientInput from '../components/GradientInput';
 
 const Login = ({ navigation }) => {
@@ -19,30 +26,34 @@ const Login = ({ navigation }) => {
   }, [navigation]);
 
   const handleLogin = async () => {
-    console.log("Verificando Login...");
+    console.log('Verificando Login...');
 
     var userObj = { email: email, senha: password };
     var jsonBody = JSON.stringify(userObj);
-  
+
     const response = await fetch('https://conectamaes-api.glitch.me/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        Accept: 'application/json',
       },
       body: jsonBody,
     });
 
     const json = await response.json();
+
     console.log(json);
     setMensagem(json.mensagem);
     storeId(json.id);
+    storeToken(json.token);
     navigation.navigate('Home');
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.cancel} onPress={() => navigation.navigate('Landing')}>
+      <TouchableOpacity
+        style={styles.cancel}
+        onPress={() => navigation.navigate('Landing')}>
         <Text style={styles.cancelText}>Cancelar</Text>
       </TouchableOpacity>
 
@@ -55,7 +66,7 @@ const Login = ({ navigation }) => {
           value={email}
           onChangeText={(event) => setEmail(event)}
           secureTextEntry={false}
-          placeholderColor = {'#BDB150'}
+          placeholderColor={'#BDB150'}
         />
 
         <GradientInput
@@ -63,10 +74,12 @@ const Login = ({ navigation }) => {
           value={password}
           onChangeText={(event) => setPassword(event)}
           secureTextEntry={true}
-          placeholderColor = {'#BDB150'}
+          placeholderColor={'#BDB150'}
         />
 
-        <TouchableOpacity style={styles.forgotPassword} onPress={() => navigation.navigate('ForgotPassword')}>
+        <TouchableOpacity
+          style={styles.forgotPassword}
+          onPress={() => navigation.navigate('ForgotPassword')}>
           <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
         </TouchableOpacity>
       </View>
@@ -75,12 +88,14 @@ const Login = ({ navigation }) => {
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
 
-      {mensagem ? <Text style = {styles.message}>{mensagem}</Text> : null}
+      {mensagem ? <Text style={styles.message}>{mensagem}</Text> : null}
 
-      <Text style={styles.registerText}>Não possui uma conta?{' '} 
-      <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-        <Text style={styles.registerLink}>Registre-se</Text>
-      </TouchableOpacity></Text>
+      <Text style={styles.registerText}>
+        Não possui uma conta?{' '}
+        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text style={styles.registerLink}>Registre-se</Text>
+        </TouchableOpacity>
+      </Text>
     </View>
   );
 };
@@ -131,7 +146,7 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: '#333',
     fontSize: 16,
-    textDecoration: "underline",
+    textDecoration: 'underline',
   },
   registerText: {
     color: '#333',
@@ -159,9 +174,9 @@ const styles = StyleSheet.create({
   },
   message: {
     alignSelf: 'center',
-    marginBottom:20,
+    marginBottom: 20,
     color: '#C84A60',
-  }
+  },
 });
 
 export default Login;

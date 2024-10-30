@@ -7,7 +7,7 @@ import ImagePicker from 'react-native-image-picker';
 
 const Register = ({ navigation }) => {
   // Estados
-  const [user, setUser ] = useState('');
+  const [user, setUser] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -16,7 +16,7 @@ const Register = ({ navigation }) => {
   const [birthDate, setBirthDate] = useState('');
   const [location, setLocation] = useState('');
   const [theme, setTheme] = useState('YellowTheme');
-  const [currentScreen, setCurrentScreen] = useState('first'); 
+  const [currentScreen, setCurrentScreen] = useState('first');
   const [profilePicture, setProfilePicture] = useState(null); // State para a foto de perfil
 
   // Cores dos temas
@@ -116,7 +116,16 @@ const Register = ({ navigation }) => {
                   onPress={() => setTheme('YellowTheme')}
                   color={themeColors.YellowTheme}
                 />
-                <Text style={[styles.radioLabel, { color: theme === 'YellowTheme' ? themeColors.YellowTheme : '#000' }]}>
+                <Text
+                  style={[
+                    styles.radioLabel,
+                    {
+                      color:
+                        theme === 'YellowTheme'
+                          ? themeColors.YellowTheme
+                          : '#000',
+                    },
+                  ]}>
                   Amarelo
                 </Text>
 
@@ -126,7 +135,14 @@ const Register = ({ navigation }) => {
                   onPress={() => setTheme('BlueTheme')}
                   color={themeColors.BlueTheme}
                 />
-                <Text style={[styles.radioLabel, { color: theme === 'BlueTheme' ? themeColors.BlueTheme : '#000' }]}>
+                <Text
+                  style={[
+                    styles.radioLabel,
+                    {
+                      color:
+                        theme === 'BlueTheme' ? themeColors.BlueTheme : '#000',
+                    },
+                  ]}>
                   Azul
                 </Text>
 
@@ -136,7 +152,14 @@ const Register = ({ navigation }) => {
                   onPress={() => setTheme('PinkTheme')}
                   color={themeColors.PinkTheme}
                 />
-                <Text style={[styles.radioLabel, { color: theme === 'PinkTheme' ? themeColors.PinkTheme : '#000' }]}>
+                <Text
+                  style={[
+                    styles.radioLabel,
+                    {
+                      color:
+                        theme === 'PinkTheme' ? themeColors.PinkTheme : '#000',
+                    },
+                  ]}>
                   Rosa
                 </Text>
               </View>
@@ -179,11 +202,27 @@ const Register = ({ navigation }) => {
       case 'third':
         return (
           <>
-            <TouchableOpacity style={[styles.userImageContainer, { backgroundColor: '#CFCFCF', borderColor: '#808080'}]} onPress={handleChooseImage}>
-              <Image source={require('../assets/default_user.png')} style={styles.defaultUserImage} />
+            <TouchableOpacity
+              style={[
+                styles.userImageContainer,
+                { backgroundColor: '#CFCFCF', borderColor: '#808080' },
+              ]}
+              onPress={handleChooseImage}>
+              <Image
+                source={require('../assets/default_user.png')}
+                style={styles.defaultUserImage}
+              />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.cameraContainer, { borderColor: themeColors[theme]}]}>
-              <Icon name="camera" size={30} style={[styles.camera, { color: themeColors[theme]}]} />
+            <TouchableOpacity
+              style={[
+                styles.cameraContainer,
+                { borderColor: themeColors[theme] },
+              ]}>
+              <Icon
+                name="camera"
+                size={30}
+                style={[styles.camera, { color: themeColors[theme] }]}
+              />
             </TouchableOpacity>
           </>
         );
@@ -209,7 +248,7 @@ const Register = ({ navigation }) => {
       tema: theme,
       isAdmin: false,
     };
-    
+
     console.log('Dados a serem enviados:', userObj);
 
     fetch('https://conectamaes-api.glitch.me/insertUser', {
@@ -220,8 +259,8 @@ const Register = ({ navigation }) => {
       },
       body: JSON.stringify(userObj),
     })
-      .then(response => response.json())
-      .then(json => {
+      .then((response) => response.json())
+      .then((json) => {
         console.log(json);
         if (json.error) {
           alert('Erro ao registrar usuário: ' + json.error);
@@ -229,7 +268,7 @@ const Register = ({ navigation }) => {
           navigation.navigate('Login');
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         alert('Erro ao conectar com o servidor');
       });
@@ -240,16 +279,28 @@ const Register = ({ navigation }) => {
     <View style={styles.container}>
       {currentScreen !== 'first' ? (
         <TouchableOpacity style={styles.cancel} onPress={handleBack}>
-          <Icon name="arrow-left-circle-outline" size={30} color={themeColors[theme]} />
+          <Icon
+            name="arrow-left-circle-outline"
+            size={30}
+            color={themeColors[theme]}
+          />
         </TouchableOpacity>
       ) : (
-        <TouchableOpacity style={styles.cancel} onPress={() => navigation.navigate('Landing')}>
+        <TouchableOpacity
+          style={styles.cancel}
+          onPress={() => navigation.navigate('Landing')}>
           <Text style={styles.cancelText}>Cancelar</Text>
         </TouchableOpacity>
       )}
 
       <Image source={require('../assets/logo_icon.png')} style={styles.logo} />
-      <Text style={[styles.title, currentScreen === 'third' ? { marginBottom: 50 } : { marginBottom: 20 }]}>
+      <Text
+        style={[
+          styles.title,
+          currentScreen === 'third'
+            ? { marginBottom: 50 }
+            : { marginBottom: 20 },
+        ]}>
         Venha fazer parte desta comunidade!
       </Text>
 
@@ -367,16 +418,16 @@ const styles = StyleSheet.create({
     height: 175,
   },
   cameraContainer: {
-    width:50,
-    height:50,
+    width: 50,
+    height: 50,
     borderRadius: 25,
     borderWidth: 2,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
-    right:-75,
-    top:-80,
-  }
+    right: -75,
+    top: -80,
+  },
 });
 
 export default Register;

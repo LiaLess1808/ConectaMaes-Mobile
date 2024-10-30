@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList, TouchableOpacity } from 'react-native';
 import NavigationBar from '../components/NavigationBar';
 import Header from '../components/Header';
 import PostButton from '../components/PostButton';
@@ -7,11 +7,14 @@ import Post from '../components/Post';
 import { getUserTheme, fetchUserId } from '../functions/UserFunctions';
 
 const Home = ({ navigation }) => {
-  const themeColors = useMemo(() => ({
-    YellowTheme: '#BDB150',
-    BlueTheme: '#40AEBD',
-    PinkTheme: '#CF4A8E',
-  }), []);
+  const themeColors = useMemo(
+    () => ({
+      YellowTheme: '#BDB150',
+      BlueTheme: '#40AEBD',
+      PinkTheme: '#CF4A8E',
+    }),
+    []
+  );
 
   const [themeColor, setThemeColor] = useState(themeColors.YellowTheme);
   const [posts, setPosts] = useState([]);
@@ -26,13 +29,13 @@ const Home = ({ navigation }) => {
         console.log('Theme:', theme);
 
         switch (theme) {
-          case "YellowTheme":
+          case 'YellowTheme':
             setThemeColor(themeColors.YellowTheme);
             break;
-          case "PinkTheme":
+          case 'PinkTheme':
             setThemeColor(themeColors.PinkTheme);
             break;
-          case "BlueTheme":
+          case 'BlueTheme':
             setThemeColor(themeColors.BlueTheme);
             break;
           default:
@@ -56,20 +59,22 @@ const Home = ({ navigation }) => {
   }, []);
 
   const renderItem = ({ item }) => (
-    <Post title={item.title} content={item.content} />
+    <TouchableOpacity>
+      <Post title={item.title} content={item.content} />
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <Header style={styles.header} navigation={ navigation} />
+      <Header style={styles.header} navigation={navigation} />
       <View style={styles.content}>
-        <PostButton style={styles.postButton} themeColor={themeColor} />
         <FlatList
           data={posts}
           renderItem={renderItem}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.id}
           contentContainerStyle={styles.flatListContent}
         />
+        <PostButton style={styles.postButton} themeColor={themeColor} />
       </View>
       <NavigationBar style={styles.navBar} themeColor={themeColor} />
     </View>
@@ -80,18 +85,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    position: 'relative',
   },
   content: {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#fff',
+    position: 'relative',
     width: '100%',
   },
   flatListContent: {
-    paddingBottom: 0, 
+    paddingBottom: 0,
   },
   navBar: {
-    position: 'absolute',
+    position: 'sticky',
     bottom: 0,
     width: '100%',
   },
@@ -101,10 +108,10 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   postButton: {
-    alignSelf: 'flex-end',
-    bottom: 0, 
-    right: 100000,  
-    zIndex: 1,  
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    zIndex: 1,
   },
 });
 

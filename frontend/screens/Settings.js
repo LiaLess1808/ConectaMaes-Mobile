@@ -1,5 +1,12 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import SettingsHeader from '../components/SettingsHeader';
 
@@ -13,7 +20,10 @@ const Settings = ({ navigation }) => {
           <Icon name="magnify" size={20} color="#000" />
           <TextInput style={styles.searchInput} placeholder={'Pesquisar'} />
         </TouchableOpacity>
-        <Image source={require('../assets/logo_typography.png')} style={styles.logoSettings} />
+        <Image
+          source={require('../assets/logo_typography.png')}
+          style={styles.logoSettings}
+        />
       </View>
       <View>
         <Text style={styles.yourAccount}>Sua conta</Text>

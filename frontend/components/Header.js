@@ -30,7 +30,7 @@ const Header = ({ navigation }) => {
         navigation.navigate('Explore');
         break;
       case 'admin':
-        // Lógica para ação de admin (se aplicável)
+        navigation.navigate('Administration');
         break;
       default:
         break;
@@ -40,27 +40,28 @@ const Header = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image source={require('../assets/logo_typography.png')} style={styles.logo} />
+        <Image
+          source={require('../assets/logo_typography.png')}
+          style={styles.logo}
+        />
       </View>
       <View style={styles.iconsContainer}>
-        {isAdmin == "1" && (
+        {isAdmin == '1' && (
           <TouchableOpacity
             onPress={() => handleIconPress('admin')}
-            accessibilityLabel="Admin"
-          >
-            <Icon name="shield-account" size={24} color="#808080" /> {/* Ícone de administração */}
+            accessibilityLabel="Admin">
+            <Icon name="shield-account" size={24} color="#808080" />{' '}
+            {/* Ícone de administração */}
           </TouchableOpacity>
         )}
         <TouchableOpacity
           onPress={() => handleIconPress('magnify')}
-          accessibilityLabel="Explorar"
-        >
+          accessibilityLabel="Explorar">
           <Icon name="magnify" size={24} color="#808080" />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => handleIconPress('cog')}
-          accessibilityLabel="Configurações"
-        >
+          accessibilityLabel="Configurações">
           <Icon name="cog" size={24} color="#808080" />
         </TouchableOpacity>
       </View>
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minWidth: 60,
     justifyContent: 'flex-end',
-    gap:20,
+    gap: 20,
   },
 });
 

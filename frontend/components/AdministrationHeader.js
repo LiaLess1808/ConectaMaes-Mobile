@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const SettingsHeader = ({ navigation }) => {
+const AdministrationHeader = ({ navigation }) => {
   const handleIconPress = (iconName, e) => {
     e.stopPropagation(); // Previne a propagação do evento
     console.log(`${iconName} icon pressed`);
@@ -22,7 +22,7 @@ const SettingsHeader = ({ navigation }) => {
       </View>
 
       <View style={styles.logoContainer}>
-        <Text style={styles.headerTitle}>Configurações</Text>
+        <Text style={styles.headerTitle}>Administração</Text>
       </View>
       <TouchableOpacity
         style={styles.cancel}
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SettingsHeader;
+export default AdministrationHeader;

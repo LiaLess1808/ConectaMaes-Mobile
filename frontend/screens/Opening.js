@@ -19,15 +19,16 @@ function Opening({ navigation }) {
   return (
     <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim }]}>
       <LinearGradient
-        colors={['rgba(249, 236, 124, 0.35)', 'rgba(125, 235, 250, 0.35)', 'rgba(250, 126, 189, 0.35)']}
+        colors={[
+          'rgba(249, 236, 124, 0.35)',
+          'rgba(125, 235, 250, 0.35)',
+          'rgba(250, 126, 189, 0.35)',
+        ]}
         style={styles.gradient}
-        start={{ x: 0, y: 0 }} 
-        end={{ x: 1, y: 1 }} 
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       />
-      <Image 
-        source={logo} 
-        style={styles.logo}
-      />
+      <Image source={logo} style={styles.logo} />
     </Animated.View>
   );
 }
