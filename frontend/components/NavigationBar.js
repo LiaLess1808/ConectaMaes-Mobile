@@ -1,9 +1,14 @@
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+
 const NavigationBar = ({ themeColor }) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.navigationBar}>
+      <TouchableOpacity style={[styles.button, { backgroundColor: themeColor }]}>
+        <Icon name="pencil" size={24} color="white" />
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.iconContainer}>
         <Icon name="home" size={25} color={themeColor} />
       </TouchableOpacity>
@@ -30,7 +35,11 @@ const NavigationBar = ({ themeColor }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  navigationBar: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -51,6 +60,17 @@ const styles = StyleSheet.create({
   heartedHand: {
     top: -11,
     left: 9,
+  },
+  button: {
+    position: 'absolute',
+    right: 10,
+    top: '-80%',
+    borderRadius: 25, // Metade da largura e altura
+    padding: 10,
+    width: 50, // Largura e altura iguais para manter a circularidade
+    height: 50,
+    justifyContent: 'center', // Centraliza o ícone verticalmente
+    alignItems: 'center', // Centraliza o ícone horizontalmente
   },
 });
 
