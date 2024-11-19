@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { uploadImage } from './functions/uploadImage';
 
 import Opening from './screens/Opening';
 import Landing from './screens/Landing';
@@ -15,7 +16,12 @@ const Stack = createStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Opening">
+      <Stack.Navigator initialRouteName="uploadImage"> {/*mudar para opening novamente*/}
+        <Stack.Screen
+          name="uploadImage"
+          component={uploadImage}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Opening"
           component={Opening}
