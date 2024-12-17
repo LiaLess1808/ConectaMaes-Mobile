@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import GradientInput from '../components/GradientInput';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ImagePicker from 'react-native-image-picker';
+import { pickImage, uploadImage } from '../functions/uploadImage';
 
 const Register = ({ navigation }) => {
   // Estados
@@ -18,6 +18,9 @@ const Register = ({ navigation }) => {
   const [theme, setTheme] = useState('YellowTheme');
   const [currentScreen, setCurrentScreen] = useState('first');
   const [profilePicture, setProfilePicture] = useState(null); // State para a foto de perfil
+  const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Cores dos temas
   const themeColors = {
@@ -71,6 +74,7 @@ const Register = ({ navigation }) => {
 
   const handleChooseImage = () => {
     // Função para escolher imagem
+    pickImage(setImage, setFile);
   };
 
   // Renderização da tela
@@ -205,24 +209,29 @@ const Register = ({ navigation }) => {
             <TouchableOpacity
               style={[
                 styles.userImageContainer,
-                { backgroundColor: '#CFCFCF', borderColor: '#808080' },
+                { backgroundColor: image ? 'transparent' : '#CFCFCF', borderColor: '#808080' },
               ]}
               onPress={handleChooseImage}>
               <Image
-                source={require('../assets/default_user.png')}
-                style={styles.defaultUserImage}
+                source={image ? { uri: image } : require('../assets/default_user.png')}
+                style={styles.userImage}
               />
             </TouchableOpacity>
             <TouchableOpacity
               style={[
                 styles.cameraContainer,
                 { borderColor: themeColors[theme] },
-              ]}>
-              <Icon
-                name="camera"
-                size={30}
-                style={[styles.camera, { color: themeColors[theme] }]}
-              />
+              ]}
+              onPress={handleChooseImage}>
+              {loading ? (
+                <ActivityIndicator size="small" color={themeColors[theme]} />
+              ) : (
+                <Icon
+                  name="camera"
+                  size={30}
+                  style={[styles.camera, { color: themeColors[theme] }]}
+                />
+              )}
             </TouchableOpacity>
           </>
         );
@@ -231,47 +240,63 @@ const Register = ({ navigation }) => {
     }
   };
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (password !== confirmPassword) {
       alert('As senhas não coincidem');
       return;
     }
 
-    const userObj = {
-      nomeCompleto: fullName,
-      nomeDeUsuario: user,
-      email: email,
-      senha: password,
-      telefone: phone,
-      estado: location,
-      dataNascimentoUsuario: birthDate,
-      tema: theme,
-      isAdmin: false,
-    };
+    if (!file) {
+      alert('Por favor, selecione uma imagem antes de confirmar.');
+      return;
+    }
 
-    console.log('Dados a serem enviados:', userObj);
+    setLoading(true);
+    console.log('Iniciando registro...');
 
-    fetch('https://conectamaes-api.glitch.me/insertUser', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify(userObj),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        if (json.error) {
-          alert('Erro ao registrar usuário: ' + json.error);
-        } else {
-          navigation.navigate('Login');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        alert('Erro ao conectar com o servidor');
+    try {
+      const imageUrl = await uploadImage(file, setProfilePicture, setLoading);
+      console.log('Link da imagem carregada:', imageUrl);
+
+      const userObj = {
+        nomeCompleto: fullName,
+        nomeDeUsuario: user,
+        email: email,
+        senha: password,
+        telefone: phone,
+        estado: location,
+        dataNascimentoUsuario: birthDate,
+        tema: theme,
+        isAdmin: false,
+        linkFotoPerfil: imageUrl,
+      };
+
+      console.log('Dados enviados à API:', userObj);
+
+      const response = await fetch('https://conectamaes-api.glitch.me/insertUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(userObj),
       });
+
+      const json = await response.json();
+      console.log('Resposta da API:', json);
+
+      if (json.error) {
+        alert('Erro ao registrar usuário: ' + json.error);
+      } else {
+        alert('Registro realizado com sucesso!');
+        navigation.navigate('Login');
+      }
+    } catch (error) {
+      console.error('Erro ao processar o registro:', error);
+      alert('Erro ao processar o registro. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Retorno do componente
@@ -412,6 +437,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
+  },
+  userImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 100,
+    resizeMode: 'cover', 
   },
   defaultUserImage: {
     width: 175,
