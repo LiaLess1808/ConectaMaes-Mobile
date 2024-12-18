@@ -14,6 +14,7 @@
     "express": "^4.21.1",
     "fastify": "^4.21.0",
     "handlebars": "^4.7.8",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.11.3"
   },
   "engines": {

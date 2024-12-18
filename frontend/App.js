@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { uploadImage } from './functions/uploadImage';
 
+// Importando as telas
 import Opening from './screens/Opening';
 import Landing from './screens/Landing';
 import Login from './screens/Login';
@@ -14,14 +14,11 @@ import Administration from './screens/Administration';
 const Stack = createStackNavigator();
 
 function App() {
+  console.warn("renderizar App");
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="uploadImage"> {/*mudar para opening novamente*/}
-        <Stack.Screen
-          name="uploadImage"
-          component={uploadImage}
-          options={{ headerShown: false }}
-        />
+      <Stack.Navigator initialRouteName="Opening">
         <Stack.Screen
           name="Opening"
           component={Opening}

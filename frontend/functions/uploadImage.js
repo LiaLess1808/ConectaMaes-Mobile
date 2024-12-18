@@ -24,6 +24,8 @@ export const pickImage = async (setImage, setFile) => {
   }
 };
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const uploadImage = async (file, setProfilePicture, setLoading) => {
   if (!file) {
     alert("Nenhuma imagem selecionada!");
@@ -33,39 +35,51 @@ export const uploadImage = async (file, setProfilePicture, setLoading) => {
   setLoading(true);
 
   const clientId = "2d484b717c2ad88";
-  const auth = Client-ID ${clientId};
+  const auth = `Client-ID ${clientId}`;
 
   const formData = new FormData();
   formData.append("image", file);
   formData.append("type", "base64");
 
-  try {
-    const response = await fetch("https://api.imgur.com/3/image/", {
-      method: "POST",
-      headers: {
-        Authorization: auth,
-        Accept: "application/json",
-      },
-      body: formData,
-    });
+  const tryUpload = async (retries = 3) => {
+    try {
+      const response = await fetch("https://api.imgur.com/3/image/", {
+        method: "POST",
+        headers: {
+          Authorization: auth,
+          Accept: "application/json",
+        },
+        body: formData,
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    setLoading(false);
+      setLoading(false);
 
-    if (response.ok) {
-      alert("Upload bem-sucedido!");
-      const imageUrl = data.data.link;
-      setProfilePicture(imageUrl); 
-      return imageUrl;
-    } else {
-      alert(Erro no upload: ${data.data.error});
+      if (response.ok) {
+        alert("Upload bem-sucedido!");
+        const imageUrl = data.data.link;
+        setProfilePicture(imageUrl);
+        console.log(imageUrl); 
+        return imageUrl;
+      } else if (response.status === 429) {
+        if (retries > 0) {
+          console.log(`Limite de requisições atingido. Tentando novamente... (${retries} tentativas restantes)`);
+          await sleep(5000); 
+          return tryUpload(retries - 1); 
+        }
+        alert("Limite de requisições atingido. Tente novamente mais tarde.");
+      } else {
+        alert(`Erro no upload: ${data.data.error}`);
+        return null;
+      }
+    } catch (err) {
+      setLoading(false);
+      console.error(err);
+      alert("Erro ao fazer upload. Tente novamente.");
       return null;
     }
-  } catch (err) {
-    setLoading(false);
-    console.error(err);
-    alert("Erro ao fazer upload. Tente novamente.");
-    return null;
-  }
+  };
+
+  await tryUpload();
 };
