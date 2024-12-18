@@ -144,7 +144,7 @@ app.post('/posts', middlewareVerifyJWT, (req, res) => {
     const idUsuarioQuePostou = currentUserId;
     const linkAnexoEnvio = '';
 
-    const insertNewPost = INSERT INTO Publicacao (tipoPublicacao, conteudo, linkAnexo, titulo, isConcluido, idUsuario) VALUES (?, ?, ?, ?, ?, ?);
+    const insertNewPost = "INSERT INTO Publicacao (tipoPublicacao, conteudo, linkAnexo, titulo, isConcluido, idUsuario) VALUES (?, ?, ?, ?, ?, ?)";
     const data = [tipoPublicacaoEnvio, conteudo, linkAnexoEnvio, titulo, isConcluido, idUsuarioQuePostou];
 
     execSQLQuery(insertNewPost, data, res);
@@ -158,7 +158,7 @@ app.get('/showPosts', middlewareVerifyJWT, (req, res) => {
 // Endpoint para buscar publicações
 app.get('/posts', middlewareVerifyJWT, (req, res) => {
     const postType = req.query.postType || '';
-    const whereClause = postType === '' ? "p.tipoPublicacao <> 'Auxilio'" : p.tipoPublicacao = ?;
+    const whereClause = postType === '' ? "p.tipoPublicacao <> 'Auxilio'" : "p.tipoPublicacao = ?";
 
     const baseQuery = `
         SELECT 
@@ -207,21 +207,21 @@ app.post('/posts/:id/like', middlewareVerifyJWT, (req, res) => {
     const idPost = req.params.id;
     const idUser = req.body.idUser;
 
-    const queryLike = SELECT * FROM curtirPublicacao WHERE idPublicacao = ? AND idUsuario = ?;
+    const queryLike = "SELECT * FROM curtirPublicacao WHERE idPublicacao = ? AND idUsuario = ?";
     const data = [idPost, idUser];
 
     execSQLQuery(queryLike, data, (err, results) => {
         if (err) {
-            return res.status(500).send(Erro ao buscar like: ${err.message});
+            return res.status(500).send(`Erro ao buscar like: ${err.message}`);
         }
 
         if (!results.length) {
             // Inserir like
-            const insertLike = INSERT INTO curtirPublicacao (idPublicacao, idUsuario) VALUES (?, ?);
+            const insertLike = "INSERT INTO curtirPublicacao (idPublicacao, idUsuario) VALUES (?, ?)";
             execSQLQuery(insertLike, [idPost, idUser], res);
         } else {
             // Remover like
-            const deleteLike = DELETE FROM curtirPublicacao WHERE idPublicacao = ? AND idUsuario = ?;
+            const deleteLike = "DELETE FROM curtirPublicacao WHERE idPublicacao = ? AND idUsuario = ?";
             execSQLQuery(deleteLike, data, res);
         }
     });
@@ -229,5 +229,5 @@ app.post('/posts/:id/like', middlewareVerifyJWT, (req, res) => {
 
 // Inicializa o servidor
 app.listen(port, () => {
-    console.log(API rodando em http://localhost:${port});
+    console.log(`API rodando em http://localhost:${port}`);
 });
