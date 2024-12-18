@@ -26,7 +26,7 @@ export const pickImage = async (setImage, setFile) => {
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const uploadImage = async (file, setProfilePicture, setLoading) => {
+export const uploadImage = async (file, setLoading) => {
   if (!file) {
     alert("Nenhuma imagem selecionada!");
     return;
@@ -58,10 +58,7 @@ export const uploadImage = async (file, setProfilePicture, setLoading) => {
 
       if (response.ok) {
         alert("Upload bem-sucedido!");
-        const imageUrl = data.data.link;
-        setProfilePicture(imageUrl);
-        console.log(imageUrl); 
-        return imageUrl;
+        return data.data.link;
       } else if (response.status === 429) {
         if (retries > 0) {
           console.log(`Limite de requisições atingido. Tentando novamente... (${retries} tentativas restantes)`);
@@ -81,5 +78,6 @@ export const uploadImage = async (file, setProfilePicture, setLoading) => {
     }
   };
 
-  await tryUpload();
+  return await tryUpload();
 };
+

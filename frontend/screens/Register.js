@@ -245,51 +245,57 @@ const Register = ({ navigation }) => {
       alert('As senhas não coincidem');
       return;
     }
-
+  
     if (!file) {
       alert('Por favor, selecione uma imagem antes de confirmar.');
       return;
     }
-
+  
     setLoading(true);
     console.log('Iniciando registro...');
-
+  
     try {
-      const imageUrl = await uploadImage(file, setProfilePicture, setLoading);
-      console.log('Link da imagem carregada:', imageUrl);
-
-      const userObj = {
-        nomeCompleto: fullName,
-        nomeDeUsuario: user,
-        email: email,
-        senha: password,
-        telefone: phone,
-        estado: location,
-        dataNascimentoUsuario: birthDate,
-        tema: theme,
-        isAdmin: false,
-        linkFotoPerfil: imageUrl,
-      };
-
-      console.log('Dados enviados à API:', userObj);
-
-      const response = await fetch('https://conectamaes-api.glitch.me/insertUser', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify(userObj),
-      });
-
-      const json = await response.json();
-      console.log('Resposta da API:', json);
-
-      if (json.error) {
-        alert('Erro ao registrar usuário: ' + json.error);
+      // Get the image URL from the uploadImage function
+      const imageUrl = await uploadImage(file, setLoading);
+  
+      if (imageUrl) {
+        console.log('Link da imagem carregada:', imageUrl);
+  
+        const userObj = {
+          nomeCompleto: fullName,
+          nomeDeUsuario: user,
+          email: email,
+          senha: password,
+          telefone: phone,
+          estado: location,
+          dataNascimentoUsuario: birthDate,
+          tema: theme,
+          isAdmin: false,
+          linkFotoPerfil: imageUrl, // Use the returned image URL
+        };
+  
+        console.log('Dados enviados à API:', userObj);
+  
+        const response = await fetch('https://conectamaes-api.glitch.me/insertUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify(userObj),
+        });
+  
+        const json = await response.json();
+        console.log('Resposta da API:', json);
+  
+        if (json.error) {
+          alert('Erro ao registrar usuário: ' + json.error);
+        } else {
+          alert('Registro realizado com sucesso!');
+          navigation.navigate('Login');
+        }
       } else {
-        alert('Registro realizado com sucesso!');
-        navigation.navigate('Login');
+        alert("Erro ao carregar a imagem.");
       }
     } catch (error) {
       console.error('Erro ao processar o registro:', error);
@@ -297,7 +303,7 @@ const Register = ({ navigation }) => {
     } finally {
       setLoading(false);
     }
-  };
+  };  
 
   // Retorno do componente
   return (
