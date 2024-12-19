@@ -1,8 +1,25 @@
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { getUserProfilePicture } from '../functions/UserFunctions'; // Importe a função que pega a foto de perfil
 
 const NavigationBar = ({ themeColor }) => {
+  const [profilePicture, setProfilePicture] = useState('');
+
+  // Função para buscar a foto de perfil
+  useEffect(() => {
+    const fetchProfilePicture = async () => {
+      try {
+        const picture = await getUserProfilePicture();
+        setProfilePicture(picture);
+      } catch (error) {
+        console.error('Erro ao carregar a foto de perfil', error);
+      }
+    };
+
+    fetchProfilePicture();
+  }, []); // O array vazio faz o efeito rodar apenas uma vez, ao montar o componente
+
   return (
     <View style={styles.navigationBar}>
       <TouchableOpacity style={[styles.button, { backgroundColor: themeColor }]}>
@@ -17,18 +34,20 @@ const NavigationBar = ({ themeColor }) => {
       </TouchableOpacity>
       <TouchableOpacity style={[styles.iconContainer, { top: 5 }]}>
         <Icon name="hand-back-right" size={25} color="#A8A8A8" />
-        <Icon
-          name="heart"
-          size={10}
-          color="#FFFFFF"
-          style={styles.heartedHand}
-        />
+        <Icon name="heart" size={10} color="#FFFFFF" style={styles.heartedHand} />
       </TouchableOpacity>
       <TouchableOpacity style={styles.iconContainer}>
         <Icon name="bell" size={25} color="#A8A8A8" />
       </TouchableOpacity>
       <TouchableOpacity style={styles.iconContainer}>
-        <Icon name="account" size={25} color={themeColor} />
+        {profilePicture ? (
+          <Image
+            source={{ uri: profilePicture }}
+            style={[styles.profileImage, { borderColor: themeColor }]} // Aplica a cor do tema à borda
+          />
+        ) : (
+          <Icon name="account" size={25} color={themeColor} />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -65,13 +84,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     top: '-80%',
-    borderRadius: 25, // Metade da largura e altura
+    borderRadius: 25,
     padding: 10,
-    width: 50, // Largura e altura iguais para manter a circularidade
+    width: 50,
     height: 50,
-    justifyContent: 'center', // Centraliza o ícone verticalmente
-    alignItems: 'center', // Centraliza o ícone horizontalmente
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  // Estilo para a foto de perfil
+  profileImage: {
+    width: 40, // Tamanho da foto de perfil (ajuste conforme necessário)
+    height: 40,
+    borderRadius: 20, // Torna a imagem redonda (metade da largura e altura)
+    borderWidth: 2, // Largura da borda
+    borderColor: '#000', // Cor padrão da borda (isso será substituído dinamicamente)
   },
 });
+
 
 export default NavigationBar;
