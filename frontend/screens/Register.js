@@ -46,9 +46,21 @@ const Register = ({ navigation }) => {
   const handleNext = () => {
     switch (currentScreen) {
       case 'first':
+        if (!user || !email || !password || !confirmPassword) {
+          Alert.alert('Erro', 'Por favor, preencha todos os campos antes de avançar.');
+          return;
+        }
+        if (password !== confirmPassword) {
+          Alert.alert('Erro', 'As senhas não coincidem.');
+          return;
+        }
         setCurrentScreen('second');
         break;
       case 'second':
+        if (!fullName || !phone || !birthDate || !location) {
+          Alert.alert('Erro', 'Por favor, preencha todos os campos antes de avançar.');
+          return;
+        }
         setCurrentScreen('third');
         break;
       case 'third':
@@ -59,6 +71,7 @@ const Register = ({ navigation }) => {
         setCurrentScreen('first');
     }
   };
+  
 
   const handleBack = () => {
     switch (currentScreen) {
