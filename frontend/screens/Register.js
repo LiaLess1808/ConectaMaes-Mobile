@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import * as Location from 'expo-location';
 import { RadioButton } from 'react-native-paper';
 import GradientInput from '../components/GradientInput';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -77,6 +78,60 @@ const Register = ({ navigation }) => {
     pickImage(setImage, setFile);
   };
 
+  // Funções de Localização
+  const handleLocationInputClick = async () => {
+    // Solicitar permissão de acesso à localização
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permissão negada', 'Permita o acesso à localização para continuar.');
+      return;
+    }
+
+    try {
+      const currentLocation = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+      });
+      
+      const { latitude, longitude } = currentLocation.coords;
+      console.log('Coordenadas atuais:', latitude, longitude);
+
+      // Chamar a função para requerir o CEP a partir da API do Google Maps
+      getPostalCodeFromGoogleMaps(latitude, longitude);
+    } catch (error) {
+      console.error('Erro ao obter localização:', error);
+      Alert.alert('Erro', 'Houve um problema ao obter a localização.');
+    }
+  };
+
+  const getPostalCodeFromGoogleMaps = async (latitude, longitude) => {
+    //Chave da conta (Do Renan) da API do Google Maps (Google Cloud Console)
+    const API_KEY = 'AIzaSyCUlWSOahtUwaKvquI1vpj6AajoBVMBr8c';
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${API_KEY}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+  
+      if (data.status !== 'OK') {
+        Alert.alert('Erro', 'Não foi possível obter o CEP, tente novamente mais tarde.');
+        return;
+      }
+  
+      const CEP = data.results[0]?.address_components.find(component =>
+        component.types.includes('postal_code'))?.long_name;
+
+        console.log('CEP Atual:', CEP);
+
+      if (CEP) {
+        setLocation(CEP);
+      } else {
+        Alert.alert('Erro', 'Não foi possível obter o CEP usando Google Maps.');
+      }
+    } catch (error) {
+      console.error('Erro ao obter o CEP:', error);
+      Alert.alert('Erro', 'Houve um problema ao obter o CEP usando Google Maps.');
+    }
+  };
+  
   // Renderização da tela
   const renderScreen = () => {
     switch (currentScreen) {
@@ -194,13 +249,15 @@ const Register = ({ navigation }) => {
               secureTextEntry={false}
               placeholderColor={placeholderColors[theme]}
             />
-            <GradientInput
-              placeholder="Localização"
-              value={location}
-              onChangeText={(event) => setLocation(event)}
-              secureTextEntry={false}
-              placeholderColor={placeholderColors[theme]}
-            />
+            <TouchableOpacity onPress={handleLocationInputClick}>
+              <GradientInput
+                placeholder="Localização"
+                value={location}
+                onChangeText={(event) => setLocation(event)}
+                secureTextEntry={false}
+                placeholderColor={placeholderColors[theme]}
+              />
+            </TouchableOpacity>
           </>
         );
       case 'third':

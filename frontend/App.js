@@ -19,7 +19,7 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Opening">
-        <Stack.Screen
+        {/*<Stack.Screen
           name="Opening"
           component={Opening}
           options={{ headerShown: false }}
@@ -28,7 +28,7 @@ function App() {
           name="Landing"
           component={Landing}
           options={{ headerShown: false }}
-        />
+        />*/}
         <Stack.Screen
           name="Register"
           component={Register}
