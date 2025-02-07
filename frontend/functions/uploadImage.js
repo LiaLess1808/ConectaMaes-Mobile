@@ -43,13 +43,14 @@ export const uploadImage = async (file, setLoading) => {
 
   const tryUpload = async (retries = 3) => {
     try {
-      const response = await fetch("https://api.imgur.com/3/image/", {
+      const response = await fetch("https://api.imgur.com/3/image", {
         method: "POST",
         headers: {
           Authorization: auth,
           Accept: "application/json",
         },
         body: formData,
+        keepalive: true,
       });
 
       const data = await response.json();

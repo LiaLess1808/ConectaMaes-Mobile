@@ -5,6 +5,7 @@ import { RadioButton } from 'react-native-paper';
 import GradientInput from '../components/GradientInput';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { pickImage, uploadImage } from '../functions/uploadImage';
+import { ActivityIndicator } from 'react-native';
 
 const Register = ({ navigation }) => {
   // Estados
@@ -316,56 +317,48 @@ const Register = ({ navigation }) => {
       return;
     }
   
-    if (!file) {
-      alert('Por favor, selecione uma imagem antes de confirmar.');
-      return;
-    }
-  
     setLoading(true);
     console.log('Iniciando registro...');
   
     try {
-      // Get the image URL from the uploadImage function
-      const imageUrl = await uploadImage(file, setLoading);
-  
-      if (imageUrl) {
+      let imageUrl = null;
+      if (file) {
+        imageUrl = await uploadImage(file, setLoading);
         console.log('Link da imagem carregada:', imageUrl);
+      }
   
-        const userObj = {
-          nomeCompleto: fullName,
-          nomeDeUsuario: user,
-          email: email,
-          senha: password,
-          telefone: phone,
-          estado: location,
-          dataNascimentoUsuario: birthDate,
-          tema: theme,
-          isAdmin: false,
-          linkFotoPerfil: imageUrl, // Use the returned image URL
-        };
+      const userObj = {
+        nomeCompleto: fullName,
+        nomeDeUsuario: user,
+        email: email,
+        senha: password,
+        telefone: phone,
+        estado: location,
+        dataNascimentoUsuario: birthDate,
+        tema: theme,
+        isAdmin: false,
+        linkFotoPerfil: imageUrl || '', // Permite registro sem imagem
+      };
   
-        console.log('Dados enviados à API:', userObj);
+      console.log('Dados enviados à API:', userObj);
   
-        const response = await fetch('https://conectamaes-api.glitch.me/insertUser', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify(userObj),
-        });
+      const response = await fetch('https://conectamaes-api.glitch.me/insertUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(userObj),
+      });
   
-        const json = await response.json();
-        console.log('Resposta da API:', json);
+      const json = await response.json();
+      console.log('Resposta da API:', json);
   
-        if (json.error) {
-          alert('Erro ao registrar usuário: ' + json.error);
-        } else {
-          alert('Registro realizado com sucesso!');
-          navigation.navigate('Login');
-        }
+      if (json.error) {
+        alert('Erro ao registrar usuário: ' + json.error);
       } else {
-        alert("Erro ao carregar a imagem.");
+        alert('Registro realizado com sucesso!');
+        navigation.navigate('Login');
       }
     } catch (error) {
       console.error('Erro ao processar o registro:', error);
@@ -373,7 +366,8 @@ const Register = ({ navigation }) => {
     } finally {
       setLoading(false);
     }
-  };  
+  };
+  
 
   // Retorno do componente
   return (
