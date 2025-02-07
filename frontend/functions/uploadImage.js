@@ -73,7 +73,7 @@ export const uploadImage = async (file, setLoading) => {
     } catch (err) {
       setLoading(false);
       console.error(err);
-      alert("Erro ao fazer upload. Tente novamente.");
+      alert("Erro ao fazer upload. Tente novamente.(imgur)");
       return null;
     }
   };
