@@ -15,7 +15,7 @@ const privateKey = "conectamaes.linceonline.com.br.200420052005.web_token";
 
 // Configuração do banco de dados
 const db = {
-    host: '54.173.126.116',
+    host: '3.209.65.64',
     port: 3306,
     user: 'tet-conectamaes',
     password: 'conectamaes2024',

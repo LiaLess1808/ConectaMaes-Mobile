@@ -18,10 +18,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.liviabraga.snackbe682d6c3e76422894f224a3c0fb8efe"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f7bd52f7-2625-4623-b912-1710f8710366"
+      }
     }
   }
 }
